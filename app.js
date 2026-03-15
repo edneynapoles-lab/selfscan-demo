@@ -162,6 +162,27 @@ const CLUB_CUSTOMERS = {
       go('product');
     }
 
+
+
+    function normalizeLookup(v) {
+      return String(v ?? '').trim().toUpperCase().replace(/\s+/g, '');
+    }
+
+    function getProductDisplayCode(p) {
+      const parts = [];
+      if (p?.code) parts.push(`SKU ${p.code}`);
+      if (p?.barcode) parts.push(`EAN ${p.barcode}`);
+      return parts.join(' · ') || 'Sin código';
+    }
+
+    function findProductByLookup(value) {
+      const q = normalizeLookup(value);
+      if(!q) return null;
+      return catalog.find((p) => {
+        return normalizeLookup(p.code) === q || normalizeLookup(p.barcode) === q;
+      }) || null;
+    }
+
     function totalList() {
       return cart.reduce((acc, item) => acc + item.listPrice * (item.qty || 1), 0);
     }
@@ -280,12 +301,20 @@ const CLUB_CUSTOMERS = {
     async function startCamera() {
       if(!navigator.mediaDevices?.getUserMedia) return toast('Este navegador no permite cámara en este contexto.');
       try {
-        stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}, audio:false});
-        $('video').srcObject = stream;
-        $('video').classList.remove('hidden');
+        const videoEl = $('video');
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' } },
+          audio: false
+        });
+        videoEl.srcObject = stream;
+        videoEl.classList.remove('hidden');
         $('videoFallback').classList.add('hidden');
+        try {
+          await videoEl.play();
+        } catch (_) {}
         toast('Cámara activada');
       } catch(err) {
+        stopCamera();
         toast('No se pudo activar la cámara. Usa el catálogo o ingreso manual.');
       }
     }

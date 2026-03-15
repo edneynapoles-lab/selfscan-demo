@@ -25,7 +25,6 @@
 </div>
 <div class="stack">
 <button class="btn btn-primary btn-full" data-go="scan" type="button">Iniciar compra</button>
-<button class="btn btn-secondary btn-full" data-go="catalog" type="button">Administrar catálogo</button>
 </div>
 </section>
 <section class="screen" id="scan">
@@ -44,29 +43,31 @@
 <div class="scanner card" style="padding:0">
 <video autoplay="" class="hidden" id="video" muted="" playsinline=""></video>
 <div id="videoFallback" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:18px;background:linear-gradient(180deg,#0f172a,#111827);padding:18px;text-align:center;">
-          Cámara lista. Presiona “Activar cámara”.
+          La cámara se iniciará al tocar el botón. Luego el producto se detecta solo, sin otro botón.
         </div>
 <div class="scanner-overlay"><div class="scan-box"><div class="scan-line"></div></div></div>
 </div>
 <div class="stack">
-<div class="row">
-<button class="btn btn-secondary btn-full" id="cameraBtn" type="button">Activar cámara</button>
-<button class="btn btn-ghost btn-full" id="autoScanBtn" type="button"><span id="autoScanLabel">Iniciar auto-escaneo</span></button>
+<div class="card">
+<div class="section-title"><h3>Escaneo automático</h3><span class="badge badge-info" id="barcodeSupport">Detectando soporte…</span></div>
+<div class="tiny muted" style="margin-bottom:10px">Activa la cámara una sola vez. Cuando vuelvas a esta pantalla, intentará reanudarla y buscará el artículo automáticamente.</div>
+<button class="btn btn-primary btn-full" id="cameraBtn" type="button">Activar cámara y escanear</button>
 </div>
 <div class="card">
-<div class="section-title"><h3>Ingreso manual (fallback)</h3><span class="badge badge-info" id="barcodeSupport">Detectando soporte…</span></div>
+<div class="section-title"><h3>Ingreso manual</h3><span class="badge badge-info">SKU / EAN</span></div>
 <div class="row" style="align-items:stretch">
-<input id="manualCode" placeholder="Código/EAN/UPC/SKU"/>
+<input id="manualCode" placeholder="Escribe SKU o código de barras"/>
 <button class="btn btn-primary" id="manualSearchBtn" type="button">Buscar</button>
 </div>
+<div class="tiny muted" style="margin-top:10px">El artículo solo se mostrará cuando lo encuentres por cámara, SKU o código de barras.</div>
 </div>
 <div class="card">
 <div class="section-title"><h3>Cliente</h3><button class="btn btn-secondary btn-small" data-go="customer" type="button">Ingresar</button></div>
 <p class="muted tiny">Ingresar cliente no corta el flujo: vuelves a Carrito para pagar o seguir escaneando.</p>
 </div>
 <div class="card">
-<div class="section-title"><h3>Búsqueda</h3><span class="badge badge-info">SKU / EAN</span></div>
-<div class="tiny muted" style="margin-bottom:10px">No se muestran productos en pantalla. Escribe el SKU, el código de barras o escanéalo para buscarlo.</div>
+<div class="section-title"><h3>Estado de búsqueda</h3><span class="badge badge-info">Bajo demanda</span></div>
+<div class="tiny muted" style="margin-bottom:10px">No se muestra catálogo completo. Solo aparece el producto encontrado.</div>
 <div class="product-list" id="demoList"></div>
 </div>
 </div>
@@ -79,6 +80,7 @@
 <div class="kv">
 <div class="item"><span>Precio lista</span><strong id="productListPrice">$0</strong></div>
 <div class="item"><span>Precio oferta</span><strong id="productSalePrice">$0</strong></div>
+<div class="item hidden" id="productClubRow"><span>Precio Club final</span><strong id="productClubPrice">$0</strong></div>
 <div class="item"><span>Descuento</span><strong id="productDiscount">-</strong></div>
 <div class="item"><span>Código</span><strong id="productCode">000</strong></div>
 <div class="item"><span>Formato</span><strong id="productFormat">Unidad</strong></div>
@@ -196,7 +198,7 @@
 <button class="btn btn-primary btn-full" id="newOrderBtn" type="button">Nueva compra</button>
 </div>
 </section>
-<section class="screen" id="catalog">
+<section class="screen hidden" id="catalog">
 <div class="section-title"><h2>Administrar catálogo</h2><button class="btn btn-secondary" data-go="home" type="button">Inicio</button></div>
 <div class="card stack">
 <div class="section-title"><h3>Productos cargados</h3><span class="badge badge-info" id="catCount">0</span></div>

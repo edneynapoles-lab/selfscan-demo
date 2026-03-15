@@ -106,3 +106,13 @@
     .scanner video.ready { display:block !important; }
     .status-ok { color:#166534; font-weight:700; }
     .status-warn { color:#9a3412; font-weight:700; }
+
+
+    .scanner-control-card { display:grid; gap:12px; }
+    .scanner-copy { line-height:1.45; }
+    .scanner-trigger { width:100%; border:none; border-radius:22px; padding:14px 16px; background:linear-gradient(135deg,#0f172a,#1e293b); color:#fff; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow); cursor:pointer; }
+    .scanner-trigger img { width:66px; height:66px; display:block; flex:0 0 auto; border-radius:18px; box-shadow:0 10px 24px rgba(2,6,23,.35); }
+    .scanner-trigger span { display:grid; gap:4px; text-align:left; }
+    .scanner-trigger strong { font-size:16px; line-height:1.1; }
+    .scanner-trigger small { font-size:12px; color:rgba(255,255,255,.78); }
+    .scanner-trigger:active { transform:scale(.99); }

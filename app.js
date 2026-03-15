@@ -168,6 +168,10 @@ const CLUB_CUSTOMERS = {
       return String(v ?? '').trim().toUpperCase().replace(/\s+/g, '');
     }
 
+    function digitsOnly(v) {
+      return String(v ?? '').replace(/\D+/g, '');
+    }
+
     function getProductDisplayCode(p) {
       const parts = [];
       if (p?.code) parts.push(`SKU ${p.code}`);
@@ -177,10 +181,29 @@ const CLUB_CUSTOMERS = {
 
     function findProductByLookup(value) {
       const q = normalizeLookup(value);
-      if(!q) return null;
-      return catalog.find((p) => {
+      const qDigits = digitsOnly(value);
+      if(!q && !qDigits) return null;
+
+      let match = catalog.find((p) => {
         return normalizeLookup(p.code) === q || normalizeLookup(p.barcode) === q;
       }) || null;
+      if(match) return match;
+
+      match = catalog.find((p) => digitsOnly(p.barcode) === qDigits) || null;
+      if(match) return match;
+
+      if(qDigits.length === 12) {
+        match = catalog.find((p) => digitsOnly(p.barcode) === ('0' + qDigits)) || null;
+        if(match) return match;
+      }
+
+      if(qDigits.length === 13 && qDigits.startsWith('0')) {
+        match = catalog.find((p) => digitsOnly(p.barcode) === qDigits.slice(1)) || null;
+        if(match) return match;
+      }
+
+      match = catalog.find((p) => normalizeLookup(p.name).includes(q) || normalizeLookup(p.code).includes(q)) || null;
+      return match;
     }
 
     function totalList() {
@@ -333,8 +356,9 @@ const CLUB_CUSTOMERS = {
       const code = $('manualCode').value.trim();
       if(!code) return toast('Ingresa un código');
       const p = findProductByLookup(code);
-      if(!p) return toast('Código no encontrado en catálogo');
-      openProductByCode(code);
+      if(!p) return toast('Código no encontrado en catálogo: ' + code);
+      toast('Producto encontrado: ' + p.name);
+      openProductByCode(p.barcode || p.code);
     }
 
     function toggleAutoScan() {
@@ -373,8 +397,12 @@ const CLUB_CUSTOMERS = {
               $('manualCode').value = raw;
               toast('Código detectado: ' + raw);
               const p = findProductByLookup(raw);
-              if(p) openProductByCode(raw);
-              else toast('Código no existe en catálogo.');
+              if(p) {
+                toast('Producto encontrado: ' + p.name);
+                openProductByCode(p.barcode || p.code);
+              } else {
+                toast('Código no existe en catálogo: ' + raw);
+              }
               return;
             }
           }
@@ -382,6 +410,13 @@ const CLUB_CUSTOMERS = {
       }
       scanLoopHandle = requestAnimationFrame(scanLoop);
     }
+
+    document.addEventListener('keydown', (ev) => {
+      if(ev.key === 'Enter' && document.activeElement && document.activeElement.id === 'manualCode') {
+        ev.preventDefault();
+        scanByCode();
+      }
+    });
 
     function selectMethodCard(el) {
       document.querySelectorAll('.pay-option').forEach(x => x.classList.remove('active'));

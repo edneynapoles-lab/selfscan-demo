@@ -25,7 +25,7 @@
       <div class="stack">
         <div class="card stack">
           <div class="section-title"><h3>Local de compra</h3><span class="badge badge-info">4 dígitos</span></div>
-          <input id="storeCode" inputmode="numeric" maxlength="4" placeholder="Ej.: 1234" />
+          <input id="storeCode" inputmode="numeric" maxlength="4" placeholder="Local desde QR" readonly />
           <div class="tiny muted">Ingresa el número del local antes de comenzar la venta. Solo números hasta largo 4.</div>
         </div>
         <div class="card stack">
@@ -311,5 +311,24 @@
 
   <div class="toast" id="toast"></div>
   <script src="app.js"></script>
+
+<script>
+function captureStoreFromURL(){
+  const url=window.location.href;
+  const match=url.match(/\+(\d{1,4})/);
+  if(!match){
+    alert("QR de local inválido. Debe escanear el QR del local.");
+    return;
+  }
+  const store=match[1];
+  const el=document.getElementById("storeCode");
+  if(el){
+    el.value=store;
+    el.readOnly=true;
+  }
+}
+document.addEventListener("DOMContentLoaded",captureStoreFromURL);
+</script>
+
 </body>
 </html>

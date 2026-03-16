@@ -1,23 +1,3 @@
-
-
-// === CAPTURA LOCAL DESDE URL ===
-function getStoreFromURL(){
-  const url=window.location.href;
-  const match=url.match(/\+(\d{1,4})/);
-  if(!match) return null;
-  return match[1];
-}
-
-document.addEventListener("DOMContentLoaded",()=>{
-  const store=getStoreFromURL();
-  if(!store) return;
-  const el=document.getElementById("storeCode");
-  if(el){
-    el.value=store;
-    el.readOnly=true;
-  }
-});
-
 const CLUB_CUSTOMERS = {
   "940316055": {
     "doc": "94.031.605-5",
